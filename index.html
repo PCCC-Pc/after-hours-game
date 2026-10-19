@@ -1,0 +1,506 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>已讀不回：凌晨 23:47</title>
+<style>
+:root{
+  --bg:#101116;--panel:#1b1d25;--panel2:#242631;
+  --text:#f4f0f6;--muted:#9d9daa;--red:#ff5368;
+  --pink:#ff8da1;--green:#8ce0bd;--line:#343641;
+  --gold:#eacb88;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:
+  radial-gradient(ellipse at 50% -20%,#49222f 0,transparent 45%),
+  var(--bg);color:var(--text);
+  font-family:Inter,"Noto Sans TC","Microsoft JhengHei",sans-serif;
+  min-height:100vh;
+}
+button{font:inherit;cursor:pointer}
+button:focus-visible{outline:2px solid var(--pink);outline-offset:3px}
+button:disabled{opacity:.4;cursor:not-allowed}
+.app{max-width:1050px;margin:auto;padding:24px 18px 48px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px}
+.brand{font-size:12px;letter-spacing:3px;color:var(--pink);font-weight:800}
+.case-id{font-size:11px;color:var(--muted);border:1px solid var(--line);padding:7px 10px;border-radius:99px}
+.hero{margin:26px 0 22px}
+.kicker{font-size:11px;letter-spacing:4px;color:var(--red);font-weight:800}
+h1{font-size:clamp(32px,6vw,54px);line-height:1.16;letter-spacing:-1px;margin:12px 0}
+h1 span{color:var(--pink)}
+.intro{color:#b6b2c1;line-height:1.9;font-size:14px;max-width:650px}
+.notice{margin-top:15px;color:var(--gold);font-size:12px;line-height:1.8}
+.layout{display:grid;grid-template-columns:230px minmax(0,1fr);gap:16px;align-items:start}
+.panel{background:rgba(27,29,37,.94);border:1px solid var(--line);border-radius:19px;overflow:hidden}
+.panel-head{padding:17px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:8px}
+.panel-head strong{font-size:13px}
+.muted{color:var(--muted);font-size:11px}
+.nav{padding:9px;display:grid;gap:6px}
+.nav button{border:0;background:transparent;color:#b9b8c4;text-align:left;padding:13px;border-radius:11px;font-size:13px;display:flex;align-items:center;gap:10px}
+.nav button.active,.nav button:hover{background:#3a2633;color:white}
+.nav .ico{font-size:18px;width:23px;text-align:center}
+.nav .count{margin-left:auto;background:#36313d;padding:3px 7px;border-radius:99px;font-size:10px}
+.case-status{padding:16px;border-top:1px solid var(--line)}
+.status-row{display:flex;justify-content:space-between;font-size:11px;margin:10px 0 7px;color:#c9c5d1}
+.track{height:5px;background:#363641;border-radius:99px;overflow:hidden}
+.fill{height:100%;background:linear-gradient(90deg,var(--red),var(--pink));width:0;transition:width .3s}
+.main{min-width:0}
+.view{display:none}
+.view.active{display:block;animation:fade .22s ease}
+@keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.section{padding:22px}
+.section h2{font-size:20px;margin:0 0 8px}
+.section p.lead{font-size:13px;color:var(--muted);line-height:1.8;margin:0 0 18px}
+.phonebar{display:flex;justify-content:space-between;gap:10px;padding:13px 16px;background:#242630;border-bottom:1px solid var(--line);font-size:12px}
+.phonebar span:last-child{color:var(--green)}
+.messages{padding:18px;display:grid;gap:13px;background:linear-gradient(180deg,#171921,#1c1d27)}
+.day{text-align:center;font-size:10px;color:var(--muted);margin:4px}
+.msg{max-width:84%;padding:12px 14px;border-radius:15px;font-size:13px;line-height:1.8;white-space:pre-line}
+.msg.them{background:#30323d;border-bottom-left-radius:4px;justify-self:start}
+.msg.me{background:#684052;border-bottom-right-radius:4px;justify-self:end}
+.msg .time{display:block;color:#c3aeba;font-size:10px;text-align:right;margin-top:5px}
+.clue{border:1px solid #3b3540;background:#22232c;border-radius:14px;padding:15px;margin:10px 0}
+.clue-top{display:flex;gap:12px;align-items:flex-start}
+.clue-icon{font-size:25px}
+.clue strong{font-size:13px}
+.clue p{color:#b4b0bf;font-size:12px;line-height:1.8;margin:7px 0}
+.tag{display:inline-block;font-size:10px;color:var(--gold);background:#3b3428;border-radius:5px;padding:4px 7px;margin-top:5px}
+.btn{border:1px solid #45414c;background:#2a2b35;color:var(--text);padding:11px 14px;border-radius:10px;font-size:12px}
+.btn:hover{border-color:var(--pink)}
+.btn.primary{background:var(--red);border-color:var(--red);color:#fff;font-weight:700}
+.btn.danger{border-color:#82404d;color:#ff9ca8}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}
+.btn.full{width:100%}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.card{border:1px solid var(--line);background:#22232c;border-radius:14px;padding:16px}
+.card .avatar{font-size:30px;margin-bottom:9px}
+.card h3{font-size:14px;margin:0 0 6px}
+.card p{font-size:12px;line-height:1.8;color:#aaa7b6;margin:0}
+.card .mini{font-size:10px;color:var(--pink);margin-top:12px}
+.question{display:block;width:100%;text-align:left;border:1px solid #3a3945;background:#23242e;color:#eeeaf4;border-radius:11px;padding:13px;margin-top:9px;font-size:12px;line-height:1.7}
+.question:hover{border-color:var(--pink)}
+.question small{display:block;color:var(--muted);margin-top:4px}
+.answer{background:#30232d;border-left:3px solid var(--pink);padding:14px;border-radius:0 10px 10px 0;font-size:13px;line-height:1.9;margin-top:13px;white-space:pre-line}
+.evidence-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.evidence-card{border:1px solid var(--line);background:#22232c;border-radius:13px;padding:14px}
+.evidence-card.found{border-color:#795062}
+.evidence-card .symbol{font-size:22px}
+.evidence-card strong{font-size:12px;display:block;margin:8px 0 5px}
+.evidence-card p{font-size:11px;line-height:1.8;color:#aaa7b6;margin:0}
+.evidence-card .state{font-size:10px;color:var(--green);margin-top:10px}
+.locked{opacity:.48}
+.clue-select{display:flex;gap:9px;align-items:flex-start;margin:10px 0;padding:12px;background:#22232c;border:1px solid var(--line);border-radius:10px;font-size:12px;line-height:1.7}
+.clue-select input{accent-color:var(--red);margin-top:3px}
+.ending{text-align:center;padding:32px 22px}
+.end-icon{font-size:55px}
+.ending h2{font-size:29px;margin:16px 0 10px}
+.ending p{font-size:13px;color:#c1bdca;line-height:2;max-width:560px;margin:10px auto}
+.scoreline{font-size:12px;color:var(--gold);margin:18px}
+.log{border-top:1px solid var(--line);margin-top:20px;padding-top:15px;color:var(--muted);font-size:11px;line-height:1.9}
+footer{text-align:center;color:#666673;font-size:10px;letter-spacing:2px;padding:25px 0}
+.empty{color:var(--muted);font-size:12px;line-height:1.9;padding:20px 0}
+@media(max-width:700px){
+ .app{padding:16px 12px 30px}
+ .layout{grid-template-columns:1fr}
+ .nav{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .nav button{justify-content:center;flex-direction:column;gap:5px;text-align:center;padding:10px 3px;font-size:10px}
+ .nav .count{margin:0}
+ .case-status{padding:12px}
+ .cards,.evidence-grid{grid-template-columns:1fr}
+ .section{padding:17px}
+ .hero{margin:20px 0}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="brand">AFTER HOURS / INVESTIGATION</div>
+  <div class="case-id">CASE #2347 · 虛構案件</div>
+</header>
+
+<section class="hero">
+  <div class="kicker">A LIE HAS TWO SIDES</div>
+  <h1>已讀不回<br><span>凌晨 23:47</span></h1>
+  <p class="intro">他說自己在加班。凌晨 23:47，你卻收到一張不該出現的照片。你有一個晚上找出真相——但每個人都只說了部分實話。</p>
+  <div class="notice">⚠ 本遊戲為完全虛構的推理故事。所有人物、訊息與證據皆為遊戲設定。</div>
+</section>
+
+<div class="layout">
+<aside class="panel">
+  <div class="panel-head"><strong>調查終端</strong><span class="muted">DEVICE 01</span></div>
+  <nav class="nav">
+    <button class="active" data-view="brief"><span class="ico">▣</span>案件簡報</button>
+    <button data-view="phone"><span class="ico">▤</span>聊天紀錄<span class="count">3</span></button>
+    <button data-view="gallery"><span class="ico">▧</span>相簿線索</button>
+    <button data-view="timeline"><span class="ico">◷</span>行程紀錄</button>
+    <button data-view="people"><span class="ico">♙</span>嫌疑人<span class="count">3</span></button>
+    <button data-view="evidence"><span class="ico">⌕</span>證據清單<span class="count" id="evidenceCount">0</span></button>
+    <button data-view="accuse"><span class="ico">⚑</span>提出指控</button>
+  </nav>
+  <div class="case-status">
+    <div class="muted">案件調查進度</div>
+    <div class="status-row"><span>已取得證據</span><strong id="progressText">0 / 6</strong></div>
+    <div class="track"><div class="fill" id="progressFill"></div></div>
+    <div class="status-row"><span>盤問紀錄</span><strong id="questionCount">0 / 3</strong></div>
+    <div class="track"><div class="fill" id="questionFill"></div></div>
+  </div>
+</aside>
+
+<main class="main">
+<section class="panel view active" id="view-brief">
+  <div class="section">
+    <div class="kicker">CASE FILE / 01</div>
+    <h2>案件簡報：那一晚，他在哪裡？</h2>
+    <p class="lead">你的男友林予安聲稱 21:00 到 23:30 都在公司加班。23:47，你收到朋友傳來的照片：一個與他穿著相似的人，出現在「白夜」酒吧附近。</p>
+    <div class="clue">
+      <div class="clue-top"><div class="clue-icon">📱</div><div><strong>任務一：建立時間線</strong><p>確認他說過什麼、照片拍攝時間，以及交通和消費紀錄是否能對得上。</p></div></div>
+    </div>
+    <div class="clue">
+      <div class="clue-top"><div class="clue-icon">🧩</div><div><strong>任務二：找出矛盾</strong><p>蒐集證據後，盤問三位嫌疑人。注意：某些線索看起來很可疑，卻可能有合理解釋。</p></div></div>
+    </div>
+    <div class="clue">
+      <div class="clue-top"><div class="clue-icon">⚖️</div><div><strong>任務三：做出判斷</strong><p>選擇嫌疑人，並提交至少兩項已取得的證據。證據越有關聯，越有機會得到正確結局。</p></div></div>
+    </div>
+    <button class="btn primary full" id="startBtn">開始調查 →</button>
+    <div class="log">案件開始時間：23:47<br>主要人物：林予安、許知晴、周子皓<br>案件目標：釐清當晚發生的事，而非只憑直覺判斷。</div>
+  </div>
+</section>
+
+<section class="panel view" id="view-phone">
+  <div class="phonebar"><span>‹　林予安</span><span>●●●　LTE</span></div>
+  <div class="messages">
+    <div class="day">今天 20:56</div>
+    <div class="msg them">我今晚要加班，可能會很晚。<span class="time">20:56</span></div>
+    <div class="msg me">好，記得吃飯。<span class="time">20:58　已讀</span></div>
+    <div class="msg them">公司附近都關了，晚點再說。<span class="time">21:36</span></div>
+    <div class="msg me">你今天不是說要跟專案組開會？<span class="time">21:40　已讀</span></div>
+    <div class="msg them">對啊，剛散會。<span class="time">21:43</span></div>
+    <div class="msg them">先不聊了，主管還在。<span class="time">22:18</span></div>
+    <div class="msg me">你不是說剛散會嗎？<span class="time">22:20　已讀</span></div>
+    <div class="msg them">臨時又有事。明天再跟你說。<span class="time">22:27</span></div>
+  </div>
+  <div class="section">
+    <p class="lead">聊天紀錄只代表他說過的話，不一定代表事實。點擊下方按鈕，把這段紀錄加入證據清單。</p>
+    <button class="btn primary" data-clue="chat">＋ 蒐集：加班聊天紀錄</button>
+    <div id="chatFeedback" class="answer" hidden></div>
+  </div>
+</section>
+
+<section class="panel view" id="view-gallery">
+  <div class="section">
+    <h2>相簿：23:47 收到的照片</h2>
+    <p class="lead">朋友傳來的三張截圖，拍攝來源不同。不要只看照片裡的人，還要留意時間與背景。</p>
+    <div class="clue">
+      <div class="clue-top"><div class="clue-icon">📸</div><div><strong>照片 A｜酒吧門口</strong><p>照片顯示一名穿深色外套的男子走進「白夜」。臉部被路牌遮住，拍攝時間為 21:52。</p><span class="tag">可疑，但未能辨識身分</span></div></div>
+      <button class="btn" data-clue="photo">蒐集照片 A</button>
+    </div>
+    <div class="clue">
+      <div class="clue-top"><div class="clue-icon">🧾</div><div><strong>照片 B｜桌上的收據</strong><p>「白夜」消費收據：21:58，兩杯飲品。付款方式為電子支付，末四碼 7312。</p><span class="tag">消費紀錄</span></div></div>
+      <button class="btn" data-clue="receipt">蒐集照片 B</button>
+    </div>
+    <div class="clue">
+      <div class="clue-top"><div class="clue-icon">🪞</div><div><strong>照片 C｜玻璃反光</strong><p>玻璃反光中疑似有兩個人影，其中一人戴著淺色手錶。但影像模糊，無法單獨確認身分。</p><span class="tag">可能的誤導線索</span></div></div>
+      <button class="btn" data-clue="reflection">蒐集照片 C</button>
+    </div>
+  </div>
+</section>
+
+<section class="panel view" id="view-timeline">
+  <div class="section">
+    <h2>行程與時間線</h2>
+    <p class="lead">以下是目前能取得的紀錄。每筆紀錄都可能有不同解釋，請交叉比對。</p>
+    <div class="clue"><strong>20:41｜公司門禁</strong><p>林予安刷卡進入辦公大樓。尚未有離開紀錄。</p><button class="btn" data-clue="entry">蒐集門禁紀錄</button></div>
+    <div class="clue"><strong>21:18｜計程車收據</strong><p>一趟從公司附近前往「白夜」所在街區的車程。乘客姓名未記錄。</p><button class="btn" data-clue="taxi">蒐集交通紀錄</button></div>
+    <div class="clue"><strong>22:11｜公司群組訊息</strong><p>同事表示：「予安剛剛不是說他先走了嗎？」但訊息沒有提及實際離開時間。</p><button class="btn" data-clue="coworker">蒐集同事訊息</button></div>
+    <div class="clue"><strong>23:06｜電子支付通知</strong><p>一筆便利商店消費，末四碼 7312。消費者身分未經確認。</p><button class="btn" data-clue="payment">蒐集支付紀錄</button></div>
+  </div>
+</section>
+
+<section class="panel view" id="view-people">
+  <div class="section">
+    <h2>嫌疑人檔案</h2>
+    <p class="lead">每個人都有隱瞞的事，但隱瞞不一定等於出軌。蒐集線索後，選擇問題進行盤問。</p>
+    <div class="cards">
+      <div class="card"><div class="avatar">🧑🏻</div><h3>林予安｜男友</h3><p>聲稱整晚在公司加班。面對時間細節時，說法似乎有些變化。</p><div class="mini">關係人 · 主要調查對象</div></div>
+      <div class="card"><div class="avatar">👩🏻</div><h3>許知晴｜同事</h3><p>與予安同組工作。她知道當天會議安排，但沒有主動提及晚上的行程。</p><div class="mini">關係人 · 關鍵證人</div></div>
+      <div class="card"><div class="avatar">🧑🏽</div><h3>周子皓｜朋友</h3><p>最初傳來酒吧照片的人。他說自己只是路過，卻知道一些不該知道的細節。</p><div class="mini">關係人 · 照片來源</div></div>
+    </div>
+    <div style="margin-top:22px">
+      <h2 style="font-size:15px">選擇盤問對象</h2>
+      <div class="btn-row">
+        <button class="btn" data-person="yuan">盤問林予安</button>
+        <button class="btn" data-person="qing">盤問許知晴</button>
+        <button class="btn" data-person="hao">盤問周子皓</button>
+      </div>
+      <div id="interrogation" style="margin-top:14px"></div>
+    </div>
+  </div>
+</section>
+
+<section class="panel view" id="view-evidence">
+  <div class="section">
+    <h2>證據清單</h2>
+    <p class="lead">這裡只會顯示你親自蒐集到的證據。試著找出至少兩項能互相印證的線索。</p>
+    <div class="evidence-grid" id="evidenceList"></div>
+    <div class="log" id="evidenceHint">提示：單一線索通常不足以確認真相。</div>
+  </div>
+</section>
+
+<section class="panel view" id="view-accuse">
+  <div class="section">
+    <div class="kicker">FINAL DECISION</div>
+    <h2>提出你的指控</h2>
+    <p class="lead">請根據證據選擇你認為最接近真相的人，並提交至少兩項證據。你也可以選擇暫時不下結論。</p>
+    <label for="suspect" class="muted">你要指控誰？</label>
+    <select id="suspect" style="display:block;width:100%;padding:13px;margin:9px 0 18px;background:#242631;color:white;border:1px solid #45414c;border-radius:10px">
+      <option value="">選擇調查結論</option>
+      <option value="yuan">林予安：男友</option>
+      <option value="qing">許知晴：同事</option>
+      <option value="hao">周子皓：朋友／照片來源</option>
+      <option value="none">證據不足，暫不指控</option>
+    </select>
+    <div class="muted">選擇你要提交的證據（至少兩項）</div>
+    <div id="accuseEvidence"></div>
+    <div id="accuseError" class="answer" hidden></div>
+    <button class="btn primary full" id="submitAccusation" style="margin-top:16px">確認指控，揭曉真相</button>
+    <div class="log">提醒：照片中的人影、消費紀錄與行程時間都可能有其他解釋。請先比對證據，再做出判斷。</div>
+  </div>
+</section>
+
+<section class="panel view" id="view-ending">
+  <div class="ending">
+    <div class="kicker">CASE CLOSED</div>
+    <div class="end-icon" id="endingIcon">🔎</div>
+    <h2 id="endingTitle">調查結果</h2>
+    <p id="endingText"></p>
+    <div class="scoreline" id="endingScore"></div>
+    <div class="btn-row" style="justify-content:center">
+      <button class="btn primary" id="playAgain">重新調查</button>
+      <button class="btn" id="reviewEvidence">檢視證據</button>
+    </div>
+    <div class="log">遊戲案件為虛構創作，結局由你的指控與蒐證行為決定。</div>
+  </div>
+</section>
+</main>
+</div>
+</div>
+<footer>AFTER HOURS · EVERY MESSAGE LEAVES A TRACE</footer>
+
+<script>
+const clueData={
+ chat:{icon:"💬",name:"加班聊天紀錄",desc:"20:56 說要加班；21:43 說會議散會；22:27 又說主管還在。說法存在時間上的疑點。"},
+ photo:{icon:"📸",name:"酒吧門口照片",desc:"21:52 有一名外貌不清楚的男子進入酒吧，無法單獨證明身分。"},
+ receipt:{icon:"🧾",name:"酒吧消費收據",desc:"21:58 兩杯飲品，電子支付末四碼 7312。"},
+ reflection:{icon:"🪞",name:"玻璃反光照片",desc:"疑似兩個人影與淺色手錶，但影像模糊，可能造成誤判。"},
+ entry:{icon:"🏢",name:"公司門禁紀錄",desc:"20:41 林予安進入大樓，沒有可用的離開刷卡紀錄；但這不代表他整晚都在公司。"},
+ taxi:{icon:"🚕",name:"計程車紀錄",desc:"21:18 有一趟從公司附近前往酒吧街區的車程，乘客身分未確認。"},
+ coworker:{icon:"🗨️",name:"同事群組訊息",desc:"22:11 同事說予安曾表示先離開，與他所說主管仍在的說法有衝突。"},
+ payment:{icon:"💳",name:"便利商店支付紀錄",desc:"23:06 有一筆末四碼 7312 的消費。相同末四碼可能屬於同一付款工具，但仍需其他線索確認。"}
+};
+const people={
+ yuan:{
+  name:"林予安",
+  questions:[
+   {q:"你說 22:27 主管還在，為什麼同事說你先走了？",a:"他停了一下：「我那時候確實先離開會議室，但後來又回去拿東西。我沒說清楚。」這個解釋仍需其他紀錄驗證。",clue:"coworker"},
+   {q:"你今晚去過白夜酒吧嗎？",a:"「沒有。我直接回家。」他回答得很快，但目前還沒有證據能單獨證明他去過酒吧。",clue:"photo"},
+   {q:"末四碼 7312 的支付工具是你的嗎？",a:"「是我的電子支付，但手機有時會借朋友用。」他承認支付工具可能與自己有關，卻否認能據此確認當晚是他消費。",clue:"payment"}
+  ]
+ },
+ qing:{
+  name:"許知晴",
+  questions:[
+   {q:"當晚的會議幾點結束？",a:"「正式會議大概九點結束，後面大家各自處理事情。」她沒有確認林予安離開公司的確切時間。",clue:"coworker"},
+   {q:"你認識白夜酒吧嗎？",a:"「聽過，但我沒去。」她說那一帶有不少店，單憑她知道店名不能推定她在場。",clue:"receipt"},
+   {q:"你是否和林予安一起離開？",a:"「沒有一起走。我比他早離開會議室，但不知道他後來去哪裡。」她的說法沒有直接證實兩人是否在酒吧碰面。",clue:"entry"}
+  ]
+ },
+ hao:{
+  name:"周子皓",
+  questions:[
+   {q:"照片是你拍的嗎？",a:"「不是我拍的，是別人傳給我的。」他沒有提供原始拍攝者，照片來源仍有疑點。",clue:"photo"},
+   {q:"你為什麼知道那個人可能是予安？",a:"「外套很像啊。」他承認沒有看清臉。這張照片不足以單獨辨認身分。",clue:"reflection"},
+   {q:"你當晚去過白夜嗎？",a:"「我經過那條街，但沒進去。」他沒有說明為何能在短時間內收到酒吧照片。",clue:"taxi"}
+  ]
+ }
+};
+let found=new Set();
+let asked=new Set();
+let started=false;
+let selectedPerson="yuan";
+let accusationHistory=[];
+
+function saveState(){
+ try{
+  localStorage.setItem("afterHoursSave",JSON.stringify({
+   found:[...found],asked:[...asked],started
+  }));
+ }catch(e){}
+}
+function loadState(){
+ try{
+  const s=JSON.parse(localStorage.getItem("afterHoursSave"));
+  if(s){found=new Set(s.found||[]);asked=new Set(s.asked||[]);started=!!s.started;}
+ }catch(e){}
+}
+function updateStatus(){
+ const n=found.size;
+ document.getElementById("evidenceCount").textContent=n;
+ document.getElementById("progressText").textContent=n+" / 6";
+ document.getElementById("progressFill").style.width=Math.min(100,n/6*100)+"%";
+ document.getElementById("questionCount").textContent=asked.size+" / 3";
+ document.getElementById("questionFill").style.width=Math.min(100,asked.size/3*100)+"%";
+}
+function addClue(id){
+ if(!clueData[id])return;
+ const fresh=!found.has(id);
+ found.add(id);
+ saveState();updateStatus();renderEvidence();renderAccuse();
+ if(fresh){
+  const target=document.getElementById(id==="chat"?"chatFeedback": "evidenceHint");
+  if(id==="chat"){
+   target.hidden=false;
+   target.textContent="已加入證據清單：加班聊天紀錄。請比對行程紀錄與嫌疑人的說法。";
+  }
+ }
+}
+function switchView(name){
+ document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+ const target=document.getElementById("view-"+name);
+ if(target)target.classList.add("active");
+ document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
+ if(name==="evidence")renderEvidence();
+ if(name==="accuse")renderAccuse();
+ if(name==="people")renderInterrogation();
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+function renderEvidence(){
+ const box=document.getElementById("evidenceList");
+ box.replaceChildren();
+ const ids=Object.keys(clueData);
+ ids.forEach(id=>{
+  const c=clueData[id],has=found.has(id);
+  const card=document.createElement("div");
+  card.className="evidence-card"+(has?" found":"");
+  const icon=document.createElement("div");icon.className="symbol";icon.textContent=has?c.icon:"🔒";
+  const title=document.createElement("strong");title.textContent=has?c.name:"未蒐集的線索";
+  const desc=document.createElement("p");desc.textContent=has?c.desc:"前往聊天紀錄、相簿或行程頁面取得。";
+  const state=document.createElement("div");state.className="state";state.textContent=has?"✓ 已取得":"尚未取得";
+  card.append(icon,title,desc,state);box.append(card);
+ });
+ document.getElementById("evidenceHint").textContent=
+ "已取得 "+found.size+" 項線索。請留意：收據、照片、門禁紀錄與聊天說法需要互相印證。";
+}
+function renderInterrogation(){
+ const box=document.getElementById("interrogation");
+ if(!box)return;
+ const p=people[selectedPerson];
+ box.replaceChildren();
+ const title=document.createElement("div");title.className="answer";title.textContent="目前盤問："+p.name;
+ box.append(title);
+ p.questions.forEach((item,i)=>{
+  const btn=document.createElement("button");btn.className="question";
+  btn.textContent=item.q;
+  const small=document.createElement("small");
+  small.textContent=asked.has(selectedPerson+"-"+i)?"已盤問":"點擊提出問題";
+  btn.append(small);
+  btn.addEventListener("click",()=>{
+   asked.add(selectedPerson+"-"+i);
+   const answer=document.createElement("div");answer.className="answer";answer.textContent=item.a;
+   btn.after(answer);btn.disabled=true;
+   addClue(item.clue);saveState();updateStatus();
+   small.textContent="已盤問";
+  });
+  if(asked.has(selectedPerson+"-"+i))btn.disabled=true;
+  box.append(btn);
+ });
+}
+function renderAccuse(){
+ const box=document.getElementById("accuseEvidence");
+ if(!box)return;
+ box.replaceChildren();
+ Object.keys(clueData).forEach(id=>{
+  if(!found.has(id))return;
+  const label=document.createElement("label");label.className="clue-select";
+  const input=document.createElement("input");input.type="checkbox";input.value=id;
+  input.checked=accusationHistory.includes(id);
+  const content=document.createElement("span");
+  content.textContent=clueData[id].name+" — "+clueData[id].desc;
+  label.append(input,content);box.append(label);
+ });
+}
+function revealEnding(kind,title,text,icon){
+ switchView("ending");
+ document.getElementById("endingIcon").textContent=icon;
+ document.getElementById("endingTitle").textContent=title;
+ document.getElementById("endingText").textContent=text;
+ document.getElementById("endingScore").textContent=
+ "已蒐集 "+found.size+" 項證據 · 已盤問 "+asked.size+" 次";
+}
+function submitAccusation(){
+ const suspect=document.getElementById("suspect").value;
+ const chosen=[...document.querySelectorAll("#accuseEvidence input:checked")].map(x=>x.value);
+ const err=document.getElementById("accuseError");
+ err.hidden=true;
+ if(!suspect){
+  err.hidden=false;err.textContent="請先選擇一項調查結論。";return;
+ }
+ if(suspect!=="none"&&chosen.length<2){
+  err.hidden=false;err.textContent="指控前至少需要提交兩項證據。請回到調查頁面蒐集更多線索。";return;
+ }
+ accusationHistory=chosen;
+ const strong=chosen.includes("coworker")&&chosen.includes("chat");
+ const corroborated=chosen.includes("receipt")&&(chosen.includes("payment")||chosen.includes("taxi"));
+ if(suspect==="none"){
+  revealEnding("open","🔎","證據不足，暫不指控","你決定不急著下結論。這不是失敗，而是知道目前的資料還不足以證明誰做了什麼。你保留了繼續調查的可能。","🔎");
+ }else if(suspect==="yuan"&&strong&&corroborated){
+  revealEnding("truth","時間線揭穿了謊言","你把聊天紀錄、同事訊息與消費／交通線索放在一起，發現林予安的說法無法完全吻合。他承認自己當晚確實隱瞞了行程，但酒吧照片本身仍不足以證明所有細節。你成功揭穿謊言，也知道真正的信任問題需要當面談清楚。","🧩");
+ }else if(suspect==="yuan"&&(chosen.includes("chat")||chosen.includes("coworker"))){
+  revealEnding("partial","接近真相，但證據不完整","你抓到了時間線的矛盾，卻還缺少能把人物與地點連在一起的證據。林予安否認出軌，並指出照片無法辨認身分。你看見了謊言的輪廓，卻還不能確定全部真相。","⚠️");
+ }else if(suspect==="hao"&&(chosen.includes("photo")||chosen.includes("reflection"))){
+  revealEnding("mislead","你抓到了照片來源的疑點","周子皓的照片來源說法確實有問題，但這並不能證明他是感情背叛的當事人。你把照片來源和出軌本身混為一談，真正的時間線仍未解開。","📷");
+ }else if(suspect==="qing"){
+  revealEnding("wrong","錯誤指控","你懷疑許知晴，卻沒有足夠證據證明她當晚與林予安一起出現在酒吧。她的回答有保留，但保留資訊不等於背叛。錯誤的指控讓所有人都更難說出真相。","✕");
+ }else{
+  revealEnding("wrong","證據還無法支持你的指控","你提交的線索可能很可疑，卻沒有形成足夠完整的證據鏈。你把巧合當成了證明。重新整理時間線、再盤問一次，或許能看見之前忽略的細節。","🕯️");
+ }
+}
+function resetGame(){
+ found=new Set();asked=new Set();started=false;accusationHistory=[];
+ try{localStorage.removeItem("afterHoursSave")}catch(e){}
+ updateStatus();renderEvidence();renderAccuse();
+ document.getElementById("interrogation").replaceChildren();
+ switchView("brief");
+}
+document.querySelectorAll(".nav button").forEach(btn=>{
+ btn.addEventListener("click",()=>switchView(btn.dataset.view));
+});
+document.getElementById("startBtn").addEventListener("click",()=>{
+ started=true;saveState();switchView("phone");
+});
+document.querySelectorAll("[data-clue]").forEach(btn=>{
+ btn.addEventListener("click",()=>{
+  addClue(btn.dataset.clue);
+  const old=btn.textContent;
+  btn.textContent="✓ 已加入證據";
+  btn.disabled=true;
+ });
+});
+document.querySelectorAll("[data-person]").forEach(btn=>{
+ btn.addEventListener("click",()=>{
+  selectedPerson=btn.dataset.person;renderInterrogation();
+  document.getElementById("interrogation").scrollIntoView({behavior:"smooth",block:"nearest"});
+ });
+});
+document.getElementById("submitAccusation").addEventListener("click",submitAccusation);
+document.getElementById("playAgain").addEventListener("click",()=>{
+ if(confirm("要清除本次調查紀錄，重新開始嗎？"))resetGame();
+});
+document.getElementById("reviewEvidence").addEventListener("click",()=>switchView("evidence"));
+loadState();updateStatus();renderEvidence();renderAccuse();
+</script>
+</body>
+</html>
